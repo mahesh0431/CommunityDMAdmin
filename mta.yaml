@@ -1,0 +1,66 @@
+_schema-version: "3.2"
+ID: CommunityDMAdmin
+version: 0.0.1
+modules:
+- name: communitydmadmin-approuter
+  type: approuter.nodejs
+  path: communitydmadmin-approuter
+  requires:
+  - name: CommunityDMAdmin_html_repo_runtime
+  - name: uaa_CommunityDMAdmin
+  - name: sapcommunity_dm
+    properties: 
+      destinations: "[{\"name\": \"sdibackend\", \"url\": \"https://api-sdm-di.cfapps.sap.hana.ondemand.com\", \"forwardAuthToken\": true}]"
+  parameters:
+    disk-quota: 256M
+    memory: 256M
+- name: CommunityDMAdmin_ui_deployer
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: CommunityDMAdmin_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - communitydmadminui5-content.zip
+      name: communitydmadminui5
+      target-path: resources/
+- name: communitydmadminui5
+  type: html5
+  path: communitydmadminui5
+  build-parameters:
+    builder: custom
+    commands:
+    - npm run build
+    supported-platforms: []
+resources:
+- name: CommunityDMAdmin_html_repo_runtime
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-runtime
+- name: CommunityDMAdmin_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-plan: app-host
+- name: uaa_CommunityDMAdmin
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: CommunityDMAdmin-xsuaa-service
+    service-plan: application
+- name: sapcommunity_dm
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: sdm
+    service-plan: standard
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npm install
