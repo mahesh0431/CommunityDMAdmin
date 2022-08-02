@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "devDependencies": {
     "@sap/ui5-builder-webide-extension": "1.0.x",
-    "@ui5/cli": "2.2.6",
-    "eslint": "5.16.x",
+    "@ui5/cli": "2.14.10",
+    "eslint": "8.20.x",
     "@sap/eslint-plugin-ui5-jsdocs": "2.0.x",
-    "@sapui5/ts-types": "1.71.x",
+    "@sapui5/ts-types": "1.104.x",
     "bestzip": "2.1.4",
     "rimraf": "3.0.2"
   },
@@ -14,5 +14,10 @@
     "dependencies": [
       "@sap/ui5-builder-webide-extension"
     ]
+  },
+  "scripts": {
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "undeploy": "cf undeploy communitydmadmin --delete-services --delete-service-keys"
   }
 }
