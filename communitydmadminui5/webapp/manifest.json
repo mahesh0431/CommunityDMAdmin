@@ -55,7 +55,7 @@
             "com.sap.ecm.reuse.documentTable": "./../comsapecmreuse.comsapecmreusedocumentTable/"
         },
         "dependencies": {
-            "minUI5Version": "1.84.0",
+            "minUI5Version": "1.60.1",
             "libs": {
                 "sap.ui.core": {},
                 "sap.m": {},
