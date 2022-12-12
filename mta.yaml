@@ -9,8 +9,15 @@ modules:
   - name: CommunityDMAdmin_html_repo_runtime
   - name: uaa_CommunityDMAdmin
   - name: sapcommunity_dm
-    properties: 
-      destinations: "[{\"name\": \"sdibackend\", \"url\": \"https://api-sdm-di.cfapps.sap.hana.ondemand.com\", \"forwardAuthToken\": true}]"
+    properties:
+      destinations: '[{"name": "sdibackend", "url": "https://api-sdm-di.cfapps.sap.hana.ondemand.com",
+        "forwardAuthToken": true}]'
+  - name: CommunityDMAdmin-destination-service
+    group: destinations
+    properties:
+      forwardAuthToken: false
+      name: ui5
+      url: https://ui5.sap.com
   parameters:
     disk-quota: 256M
     memory: 256M
@@ -25,16 +32,18 @@ modules:
     build-result: resources
     requires:
     - artifacts:
-      - communitydmadminui5-content.zip
-      name: communitydmadminui5
+      - nscommunitydmadminui5.zip
+      name: nscommunitydmadminui5
       target-path: resources/
-- name: communitydmadminui5
+- name: nscommunitydmadminui5
   type: html5
   path: communitydmadminui5
   build-parameters:
+    build-result: dist
     builder: custom
     commands:
-    - npm run build
+    - npm install
+    - npm run build:cf
     supported-platforms: []
 resources:
 - name: CommunityDMAdmin_html_repo_runtime
@@ -59,6 +68,26 @@ resources:
   parameters:
     service: sdm
     service-plan: standard
+- name: CommunityDMAdmin-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: false
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: CommunityDMAdmin-destination-service
+    service-plan: lite
+parameters:
+  deploy_mode: html5-repo
 build-parameters:
   before-all:
   - builder: custom

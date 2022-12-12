@@ -13,7 +13,8 @@
         "ach": "ach",
         "sourceTemplate": {
             "id": "html5moduletemplates.basicSAPUI5ApplicationProjectModule",
-            "version": "1.40.12"
+            "version": "1.40.12",
+            "toolsId": "51e448a1-46d5-4036-9cea-76d58b8f6751"
         }
     },
     "sap.ui": {
